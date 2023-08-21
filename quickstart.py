@@ -13,8 +13,10 @@ import re
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
+with open('spredsheetId.txt', 'r') as file:
+    spreadsheetid = [line.strip() for line in file.readlines()]
 # The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = '1MHCzKNIL5cEitSdE-qLhtfoiONCb_cjKcNqvIJVh4BE'
+SAMPLE_SPREADSHEET_ID = spreadsheetid[0]
 SAMPLE_RANGE_NAME = 'Ark 1!C2:M2000'
 
 def main():
