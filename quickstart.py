@@ -59,8 +59,8 @@ def main():
             bydeler = [line.strip().lower() for line in file.readlines()]
 
         flattened_array = [[row[0].lower(), row[j] if len(row) > j else ''] for row in values for j in range(3, 11)]
-        # filtered_array = [row for row in flattened_array if all(cell.strip() for cell in row) and row[0] in bydeler]
-        filtered_array = [row for row in flattened_array if all(cell.strip() for cell in row)]
+        filtered_array = [row for row in flattened_array if all(cell.strip() for cell in row) and row[0] in bydeler]
+        # filtered_array = [row for row in flattened_array if all(cell.strip() for cell in row)]
 
         # print('Bydel, kommentar:')
         # for row in filtered_array:
