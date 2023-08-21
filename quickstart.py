@@ -14,9 +14,8 @@ import re
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = '1L5kjQ-pE7oD-fWeCx9BLjs9ORgBcXLHQCAQXNlQjsnU'
-SAMPLE_RANGE_NAME = 'Ark 1!C2:M10'
-
+SAMPLE_SPREADSHEET_ID = '1MHCzKNIL5cEitSdE-qLhtfoiONCb_cjKcNqvIJVh4BE'
+SAMPLE_RANGE_NAME = 'Ark 1!C2:M2000'
 
 def main():
     """Shows basic usage of the Sheets API.
@@ -53,17 +52,19 @@ def main():
             print('No data found.')
             return
 
-        flattened_array = [[row[0], row[j] if len(row) > j else ''] for row in values for j in range(3, 11)]
-        filtered_array = [row for row in flattened_array if all(cell.strip() for cell in row)]
-
-        # Lese inn liste over ord som skal ignoreres
         with open('words.txt', 'r') as file:
-            # Read lines and remove leading/trailing whitespace
             ignoredwords = [line.strip() for line in file.readlines()]
 
-        print('Bydel, kommentar:')
-        for row in filtered_array:
-            print('%30s \t %s' % (row[0], row[1]))
+        with open('bydeler.txt', 'r') as file:
+            bydeler = [line.strip().lower() for line in file.readlines()]
+
+        flattened_array = [[row[0].lower(), row[j] if len(row) > j else ''] for row in values for j in range(3, 11)]
+        # filtered_array = [row for row in flattened_array if all(cell.strip() for cell in row) and row[0] in bydeler]
+        filtered_array = [row for row in flattened_array if all(cell.strip() for cell in row)]
+
+        # print('Bydel, kommentar:')
+        # for row in filtered_array:
+        #     print('%30s \t %s' % (row[0], row[1]))
 
         def bokstaver(input_string):
             return re.sub(r'[^a-zæøå]', '', input_string)
@@ -77,6 +78,7 @@ def main():
                     if bokstaver(word.lower()) not in ignoredwords:
                         wordcount[bokstaver(word.lower())] += 1
             return dict(sorted(wordcount.items(), key=lambda item: item[1], reverse=True))
+            # return dict(sorted(wordcount.items(), key=lambda item: item[0], reverse=True))
 
         grouped_by_bydel = defaultdict(list)
         for kommentar in filtered_array:
