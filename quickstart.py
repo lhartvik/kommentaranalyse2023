@@ -8,13 +8,14 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from collections import defaultdict
+import re
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = '1oNjnO19NpeHRMcYra53DQN55uRnjIOz4-2U8KK5miwI'
-SAMPLE_RANGE_NAME = 'Ark 1!A2:B56'
+SAMPLE_SPREADSHEET_ID = '1L5kjQ-pE7oD-fWeCx9BLjs9ORgBcXLHQCAQXNlQjsnU'
+SAMPLE_RANGE_NAME = 'Ark 1!C2:M10'
 
 
 def main():
@@ -52,10 +53,20 @@ def main():
             print('No data found.')
             return
 
+        flattened_array = [[row[0], row[j] if len(row) > j else ''] for row in values for j in range(3, 11)]
+        filtered_array = [row for row in flattened_array if all(cell.strip() for cell in row)]
+
+        # Lese inn liste over ord som skal ignoreres
+        with open('words.txt', 'r') as file:
+            # Read lines and remove leading/trailing whitespace
+            ignoredwords = [line.strip() for line in file.readlines()]
+
         print('Bydel, kommentar:')
-        for row in values:
-            # Print columns A and E, which correspond to indices 0 and 4.
+        for row in filtered_array:
             print('%30s \t %s' % (row[0], row[1]))
+
+        def bokstaver(input_string):
+            return re.sub(r'[^a-zæøå]', '', input_string)
 
         # Group by 'bydel'
         def count_words(data):
@@ -63,14 +74,15 @@ def main():
             for kommentar in data:
                 words = kommentar[1].split()
                 for word in words:
-                    wordcount[word] += 1
+                    if bokstaver(word.lower()) not in ignoredwords:
+                        wordcount[bokstaver(word.lower())] += 1
             return dict(sorted(wordcount.items(), key=lambda item: item[1], reverse=True))
 
         grouped_by_bydel = defaultdict(list)
-        for kommentar in values:
+        for kommentar in filtered_array:
             grouped_by_bydel[kommentar[0]].append(kommentar)
 
-        sorted_grouped_and_counted = count_words(values)
+        sorted_grouped_and_counted = count_words(filtered_array)
         bydel_wordcounts = defaultdict(lambda: defaultdict(int))
         for bydel, kommentarer in grouped_by_bydel.items():
             bydel_wordcounts[bydel] = count_words(kommentarer)
@@ -79,15 +91,15 @@ def main():
         for bydel, wordcount in bydel_wordcounts.items():
             sorted_bydel_wordcounts[bydel] = wordcount
 
-        print(dict(grouped_by_bydel))
+        # print(dict(grouped_by_bydel))
         print(dict(sorted_grouped_and_counted))
 
         for bydel, wordcount in sorted_bydel_wordcounts.items():
             print(f"Ordtelling for {bydel}:")
             for word, count in wordcount.items():
-                print(f"{word}: {count}")
+                if count > 1:
+                    print(f"{word}: {count}")
             print("\n")
-
 
     except HttpError as err:
         print(err)
