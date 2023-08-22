@@ -35,7 +35,7 @@ BADE, bade, badeplasser, bading
 VIND, vind, vindkraft, vindmøller
 VANN, vann, vannet
 TRIKKEN, trikken, trikk
-SPARKESYKKEL, sparkesykkel, ståmoped, elsparkesykkel, elsparkesykler
+SPARKESYKKEL, sparkesykkel, ståmoped, elsparkesykkel, elsparkesykler, elsparkesykel
 STEMME, stemme, stemmer, stemte, stemt
 NARKOTIKA, narkotika, sprøyter, legalisering
 KULTUR, kultur, kulturtilbud, klturelle

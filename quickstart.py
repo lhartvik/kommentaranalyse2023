@@ -78,6 +78,9 @@ def main():
         def bokstaver(input_string):
             return re.sub(r'[^a-zæøå]', '', input_string)
 
+        def bokstaverogmellomrom(input_kommentar):
+            return re.sub(r'[^a-zæøå\s]', '', input_kommentar)
+
         def erstatt_med_første_ord(ord):
             for synonymer in allesynonymer:
                 if ord in synonymer:
@@ -104,10 +107,7 @@ def main():
                     stripped_word = bokstaver(word.lower())
                     if stripped_word not in ignoredwords:
                         synonymcount[erstatt_med_første_ord(stripped_word)] += 1
-            return dict(sorted(synonymcount.items(), key=lambda item: item[0], reverse=True))
-
-
-
+            return dict(sorted(synonymcount.items(), key=lambda item: item[1], reverse=True))
 
         grouped_by_bydel = defaultdict(list)
         for kommentar in filtered_array:
@@ -125,24 +125,53 @@ def main():
             sorted_bydel_wordcounts[bydel] = synonymcount
 
         # print(dict(grouped_by_bydel))
-        antall_elementer = len(synonymer_opptellt)
-        slutt_indeks = antall_elementer
-        antall_hopp = 0
-
-        for ord in reversed(list(synonymer_opptellt.keys())):
-            if antall_hopp > slutt_indeks:
-                antall_hopp += 1
-                continue
-            antall = synonymer_opptellt[ord]
-            if antall > 5:
-                print(f"Ord: {ord}, Antall: {antall}")
-
+        # antall_elementer = len(synonymer_opptellt)
+        # slutt_indeks = antall_elementer
+        # antall_hopp = 0
+        #
+        # for ord in reversed(list(synonymer_opptellt.keys())):
+        #     if antall_hopp > slutt_indeks:
+        #         antall_hopp += 1
+        #         continue
+        #     antall = synonymer_opptellt[ord]
+        #     if antall > 5:
+        #         print(f"Ord: {ord}, Antall: {antall}")
+        #
         # for bydel, wordcount in sorted_bydel_wordcounts.items():
         #     print(f"Ordtelling for {bydel}:")
         #     for word, count in wordcount.items():
         #         if count > 1:
         #             print(f"{word}: {count}")
         #     print("\n")
+
+        # Lag en ordbok for å lagre ord og synonymer
+        ord_synonymer = {}
+        for ord_gruppe in allesynonymer:
+            hovedord = ord_gruppe[0]
+            synonymer = ord_gruppe[1:]
+            ord_synonymer[hovedord] = synonymer
+
+        # Ordbok for å samle kommentarer etter bydel, ord og synonym
+        resultat = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
+
+        kommentarcount=0
+        # Gå gjennom hver bydel og ord
+        for bydel, ordliste in sorted_bydel_wordcounts.items():
+            for ordet in ordliste:
+                synonymer = ord_synonymer.get(ordet, [])  # Hent synonymer for ordet
+                for kommentar_bydel, kommentar in flattened_array:
+                    if kommentar_bydel == bydel:
+                        kommentarlower = bokstaverogmellomrom(kommentar.lower())
+                        for synonym in synonymer:
+                            if f" {synonym} " in f" {kommentarlower} " or f" {ordet} " in f" {kommentarlower} ":
+                                resultat[bydel][ordet]["navn"] = bydel
+                                resultat[bydel][ordet]["ord"] = ordet
+                                resultat[bydel][ordet]["kommentarer"].append(kommentar)
+                                kommentarcount=kommentarcount+1
+                if len(resultat[bydel][ordet]['kommentarer']) > 0:
+                    print(f"{resultat[bydel][ordet]['navn']}: {resultat[bydel][ordet]['ord']}: {len(resultat[bydel][ordet]['kommentarer'])}")
+
+        print(kommentarcount)
 
     except HttpError as err:
         print(err)
