@@ -1,0 +1,49 @@
+SYKKEL, sykkel, sykkelveier, syklist, sykler, syklene, sykkelveiene, sykle, sykkelvei, syklister, sykkelfelt, sukkelkultur, elsykkel, sykkelhastighet, bysykkelstasjon, sykkelstier, sykling, sykkelsti, bysykkel, sykkelkultur, sykkelfeltet, syklistene, sykkelparkering, sykkelveg
+MARKA, marka, østmarka, skogen, markagrensa, utfartsområder, nordmarka, skog
+KOLLEKTIVTRAFIKK, kollektivtrafikk, kollektiv, kollektivtrafikken, kollektivt, månedskort, kollektivtilbud, reiserabatt, kollektivtransport, ruter, avgang, enkeltbilletter, enkeltbillett, kollektivtilbodet, kollektivtilbodvil, årskort
+TBANEN, tbanen, tbane, bane, banen, tbanen
+BUSSER, busser, leddbuss, buss, bussen, bussene, bus
+ØKONOMI, økonomi, pris, billettpris, prissetting, pirs, prisen, tilbud, billigere, avganger, dyrt, gratis, billig, støtte, penger, dyrere, prisene, kr, økonomisk
+TRAFIKKEN, trafikken, trafikanter, trafikk, trafikalt
+BIL, bil, biler, parkering, kjøre, kjører, motorvegen, parkeringsplasser, cars, bilene, biltrafikk, bompenger, beboerparkering, bilister, bilen, kjør, kjøring, bom, biltrafikken, gjennomkjøring
+BILFRITT, bilfritt, bilfri
+OSLO, oslo, byen, sentrum, by, storby
+TRYGT, trygt, usikker, trygg, skummelt, utrygt, tryggere, farlig, passe, utrygg, skumle
+FOTGJENGERE, fotgjengere, fortau, gå, går, tur, beins, gange, fotgjenger, gang, gågater, gågate, gående, gangfelt, gangveier
+GRØNTOMRÅDER, grøntområder, park, grønt, grønne, naturen, parken, natur, trær, parker, gressplen, benker, sitteplasser, grønnare, parkene, lunger, grønn, grøntarealer, grøntområde, grøntareal, grønnt,
+BARN, barn, unge, ungdom, barna, ungdommer, barnehage, ung, barnefamilier, barnevennlig
+GATE, gate, veien, gater, vei, gata, krysset, gatene, veier, veiene, vegen
+PLASS, plass, steder, området, områder, plassar, plassane, møteplasser
+ALKOHOL, alkohol, uteservering, øl, drikkepress, pils
+BO, bo, boliger, nabolaget, hus, leie, borettslag, leiligheter, bodd, hjem
+TRAFIKKLYS, trafikklys, traffikklysa, lysa, rødt
+BYGGE, bygge, bygg, legge, realisere, bygges, utbygging, bygger, bygging, bygninger
+STUDENTER, studenter, skole, studie, studentar, skolevei, skolen, skoleveien, studentrabatt
+TILGJENGELIGHET, tilgjengelighet, utestenger, tilgjengelig, tilgang, tilrettelagt, fremkommelighet
+REISE, reise, reis, mobility, reiser
+MOBILNETTET, mobilnettet, mobildekning
+SYKEHJEM, sykehjem, syk, helse, ahus, helseproblem
+FERGENE, fergene, fergekø, ferries, båten, båtene, båter
+OSLOFJORDEN, oslofjorden, fjorden, øyene
+SANKTHANSHAUGEN, sankthanshaugen, hanshaugen, sthanshaugen, sankthanshaugen
+SØPPEL, søppel, søppelkasser, søppelbøtter
+STRØM, strøm, solceller, strømmen, solcelle, strømstøtte
+BUTIKKER, butikker, senter
+IDRETT, idrett, aktiviteter, fritidstilbud, skianlegget, ungdomsklubb, fritidsaktivitet, fotball, fotballbane
+NÆRMILJØ, nærmiljø, nærmiljøet, miljø
+BADE, bade, badeplasser, bading
+VIND, vind, vindkraft, vindmøller
+VANN, vann, vannet
+TRIKKEN, trikken, trikk
+SPARKESYKKEL, sparkesykkel, ståmoped, elsparkesykkel, elsparkesykler
+STEMME, stemme, stemmer, stemte, stemt
+NARKOTIKA, narkotika, sprøyter, legalisering
+KULTUR, kultur, kulturtilbud, klturelle
+JOBB, jobb, jobbe, jobber, ansatte
+ELBIL, elbil, elbiler, elbilladere
+BARNEHAGER, barnehager, barnehagen
+KLIMA, klima, forurensing, verden
+ØNSKE, ønske, ønskelig, ønsket
+VETERINÆRHØYSKOLEN, veterinærhøyskolen, veterinærhøyskoletomta, veterinærhøyskoletomten
+VERN, vern, verneverdige, vernes
+VEGETAR, vegetar, vegan

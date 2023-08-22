@@ -27,12 +27,19 @@ Sørg for at du har Python 3.x installert. Deretter kan du installere avhengighe
 
 https://developers.google.com/sheets/api/quickstart/python
 
+OBS: Viktig at man legger inn brukernavnet på den som har tilgang til dokumentet også, i OAuth consent screen, test users!
+
 4. **Finn IDen til regnearket**
 
 Eksempel: https://docs.google.com/spreadsheets/d/1oNjnO19NpeHRMcYra53DQN55uRnjIOz4-2U8KK5miwI/edit#gid=0
 Da er IDen det som er imellom /d/ og /edit, i eksempelet '1oNjnO19NpeHRMcYra53DQN55uRnjIOz4-2U8KK5miwI'
 
 Denne skal inn i quickstart.py på linje 16 SAMPLE_SPREADSHEET_ID = 'regneark-id'
+
+5. **Slett token.json**
+
+Hvis du har en token.json som er eldre enn en viss tid(jeg tror 1 uke) så vil den gi feilmelding om at den er for gammel. 
+Den bør da slettes, slik at man logger inn i google docs på nytt og får en ny token.
 
 6. **Kjør programmet**
 

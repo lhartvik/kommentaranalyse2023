@@ -54,6 +54,11 @@ def main():
             print('No data found.')
             return
 
+        with open('synonymliste.txt', 'r') as file:
+            synonymliste = [linje.strip() for linje in file.readlines()]
+
+        allesynonymer = [linje.split(', ') for linje in synonymliste]
+
         with open('words.txt', 'r') as file:
             ignoredwords = [line.strip() for line in file.readlines()]
 
@@ -68,10 +73,19 @@ def main():
         # for row in filtered_array:
         #     print('%30s \t %s' % (row[0], row[1]))
 
+
+        # Stripper vekk alle tegn som ikke er bokstaver
         def bokstaver(input_string):
             return re.sub(r'[^a-zæøå]', '', input_string)
 
-        # Group by 'bydel'
+        def erstatt_med_første_ord(ord):
+            for synonymer in allesynonymer:
+                if ord in synonymer:
+                    return synonymer[0]
+            return ord
+
+        # Tar inn en slik array [["bydel"], ["en setning om hva som bør prioriteres"]]
+        # Returnerer en array [["en", 10], ["setning",3]...]
         def count_words(data):
             wordcount = defaultdict(int)
             for kommentar in data:
@@ -82,28 +96,53 @@ def main():
             return dict(sorted(wordcount.items(), key=lambda item: item[1], reverse=True))
             # return dict(sorted(wordcount.items(), key=lambda item: item[0], reverse=True))
 
+        def tell_synonymer(data):
+            synonymcount = defaultdict(int)
+            for kommentar in data:
+                words = re.split(r'[\/\n, ]', kommentar[1])
+                for word in words:
+                    stripped_word = bokstaver(word.lower())
+                    if stripped_word not in ignoredwords:
+                        synonymcount[erstatt_med_første_ord(stripped_word)] += 1
+            return dict(sorted(synonymcount.items(), key=lambda item: item[0], reverse=True))
+
+
+
+
         grouped_by_bydel = defaultdict(list)
         for kommentar in filtered_array:
             grouped_by_bydel[kommentar[0]].append(kommentar)
 
         sorted_grouped_and_counted = count_words(filtered_array)
+        synonymer_opptellt = tell_synonymer(filtered_array)
+
         bydel_wordcounts = defaultdict(lambda: defaultdict(int))
         for bydel, kommentarer in grouped_by_bydel.items():
-            bydel_wordcounts[bydel] = count_words(kommentarer)
+            bydel_wordcounts[bydel] = tell_synonymer(kommentarer)
 
         sorted_bydel_wordcounts = {}
-        for bydel, wordcount in bydel_wordcounts.items():
-            sorted_bydel_wordcounts[bydel] = wordcount
+        for bydel, synonymcount in bydel_wordcounts.items():
+            sorted_bydel_wordcounts[bydel] = synonymcount
 
         # print(dict(grouped_by_bydel))
-        print(dict(sorted_grouped_and_counted))
+        antall_elementer = len(synonymer_opptellt)
+        slutt_indeks = antall_elementer
+        antall_hopp = 0
 
-        for bydel, wordcount in sorted_bydel_wordcounts.items():
-            print(f"Ordtelling for {bydel}:")
-            for word, count in wordcount.items():
-                if count > 1:
-                    print(f"{word}: {count}")
-            print("\n")
+        for ord in reversed(list(synonymer_opptellt.keys())):
+            if antall_hopp > slutt_indeks:
+                antall_hopp += 1
+                continue
+            antall = synonymer_opptellt[ord]
+            if antall > 5:
+                print(f"Ord: {ord}, Antall: {antall}")
+
+        # for bydel, wordcount in sorted_bydel_wordcounts.items():
+        #     print(f"Ordtelling for {bydel}:")
+        #     for word, count in wordcount.items():
+        #         if count > 1:
+        #             print(f"{word}: {count}")
+        #     print("\n")
 
     except HttpError as err:
         print(err)
