@@ -34,14 +34,19 @@ OBS: Viktig at man legger inn brukernavnet på den som har tilgang til dokumente
 Eksempel: https://docs.google.com/spreadsheets/d/1oNjnO19NpeHRMcYra53DQN55uRnjIOz4-2U8KK5miwI/edit#gid=0
 Da er IDen det som er imellom /d/ og /edit, i eksempelet '1oNjnO19NpeHRMcYra53DQN55uRnjIOz4-2U8KK5miwI'
 
-Denne skal inn i quickstart.py på linje 16 SAMPLE_SPREADSHEET_ID = 'regneark-id'
+Denne skal inn som første linje i spreadsheetId.txt
 
 5. **Slett token.json**
 
 Hvis du har en token.json som er eldre enn en viss tid(jeg tror 1 uke) så vil den gi feilmelding om at den er for gammel. 
 Den bør da slettes, slik at man logger inn i google docs på nytt og får en ny token.
 
-6. **Kjør programmet**
+6. **Rediger filene for synonymer og ignorerte ord**
+
+synonymliste.txt inneholder lister med synonymer. Ordene på hver linje telles sammen, når man vil finne hvilke politiske begreper som det er mye interesse for i hver bydel. 
+words.txt er en liste med ord som ikke skal telles. Oppdager du ord som ikke er politiske temaer/begreper kan de legges inn her.
+
+7. **Kjør programmet**
 
 Nå skal alt være klart for å kjøre programmet:
   ```sh
