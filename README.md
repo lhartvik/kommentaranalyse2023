@@ -12,7 +12,7 @@ Følg disse trinnene for å sette opp og kjøre programmet:
 
 1. **Klon repoet:**
 
-Åpne terminalen og naviger til ønsket mappe. Deretter kjør følgende kommando for å klone dette Git-repoet:
+Åpne terminalen og naviger til ønsket mappe. Kjør deretter følgende kommando for å klone dette Git-repoet:
 
 ```sh
    git clone https://github.com/lhartvik/kommentaranalyse2023.git
