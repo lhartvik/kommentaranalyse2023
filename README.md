@@ -1,7 +1,10 @@
-# Prosjektnavn
+# Kommentaranalyse 2023
 
 Velkommen til Kommentaranalyse 2023! Dette programmet bruker Google Sheets API for å lese et regneark fra 
-docs.google.com og deler dette inn i bydeler. Følg trinnene nedenfor for å komme i gang.
+[docs.google.com](https://docs.google.com/spreadsheets/).  Stedsnavn skal ligge i kolonne C og kommentarer skal ligge i F,G,H,I,J,K,L,M. Alle kommentarer blir lest inn, 
+og alle ord telles for hver bydel. Deretter opprettes et regneark for hver bydel, hvor de ordene eller synonymbegrepene som er nevnt oftest listes opp først. 
+Begreper eller ord som bare forekommer 1 gang blir ikke skrevet inn i regnearket til bydelene.
+Følg trinnene nedenfor for å komme i gang.
 
 ## Installasjon og kjøring
 
@@ -18,16 +21,19 @@ Følg disse trinnene for å sette opp og kjøre programmet:
 
 2. **Installer avhengigheter**
    
-Sørg for at du har Python 3.x installert. Deretter kan du installere avhengigheter ved hjelp av pip:
+Sørg for at du har Python 3.x installert. https://www.python.org/downloads/
+
+Deretter må avhengigheter installeres ved hjelp av pip:
 ```sh
-   pip install -r requirements.txt
+   pip3 install -r requirements.txt
 ```
 
 3. **Opprett credentials.json**
 
+Denne fila kan du følge guiden og opprette selv eller få fra en annen som har opprettet den og som du stoler på. Her er guiden for å opprette den:
 https://developers.google.com/sheets/api/quickstart/python
-
 OBS: Viktig at man legger inn brukernavnet på den som har tilgang til dokumentet også, i OAuth consent screen, test users!
+credentials.json skal ligge i samme katalog som quickstart.py
 
 4. **Finn IDen til regnearket**
 
@@ -45,6 +51,7 @@ Den bør da slettes, slik at man logger inn i google docs på nytt og får en ny
 
 synonymliste.txt inneholder lister med synonymer. Ordene på hver linje telles sammen, når man vil finne hvilke politiske begreper som det er mye interesse for i hver bydel. 
 words.txt er en liste med ord som ikke skal telles. Oppdager du ord som ikke er politiske temaer/begreper kan de legges inn her.
+bydeler.txt kan evt. redigeres for å legge til eller fjerne bydeler/steder/byer som skal leses. Jeg har lagt inn 15 bydeler i Oslo.
 
 7. **Kjør programmet**
 
