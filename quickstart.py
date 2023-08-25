@@ -1,7 +1,7 @@
 from __future__ import print_function
 
 import os.path
-
+import datetime
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -11,7 +11,7 @@ from collections import defaultdict
 import re
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 with open('spredsheetId.txt', 'r') as file:
     spreadsheetid = [line.strip() for line in file.readlines()]
@@ -79,7 +79,7 @@ def main():
             return re.sub(r'[^a-zæøå]', '', input_string)
 
         def bokstaverogmellomrom(input_kommentar):
-            return re.sub(r'[^a-zæøå\s]', '', input_kommentar)
+            return re.sub(r'[^a-zæøå\s]', '', re.sub(r'[()]', ' ', input_kommentar))
 
         def erstatt_med_første_ord(ord):
             for synonymer in allesynonymer:
@@ -102,7 +102,7 @@ def main():
         def tell_synonymer(data):
             synonymcount = defaultdict(int)
             for kommentar in data:
-                words = re.split(r'[\/\n, ]', kommentar[1])
+                words = re.split(r'[/\n, ]', kommentar[1])
                 for word in words:
                     stripped_word = bokstaver(word.lower())
                     if stripped_word not in ignoredwords:
@@ -113,9 +113,6 @@ def main():
         for kommentar in filtered_array:
             grouped_by_bydel[kommentar[0]].append(kommentar)
 
-        sorted_grouped_and_counted = count_words(filtered_array)
-        synonymer_opptellt = tell_synonymer(filtered_array)
-
         bydel_wordcounts = defaultdict(lambda: defaultdict(int))
         for bydel, kommentarer in grouped_by_bydel.items():
             bydel_wordcounts[bydel] = tell_synonymer(kommentarer)
@@ -123,26 +120,6 @@ def main():
         sorted_bydel_wordcounts = {}
         for bydel, synonymcount in bydel_wordcounts.items():
             sorted_bydel_wordcounts[bydel] = synonymcount
-
-        # print(dict(grouped_by_bydel))
-        # antall_elementer = len(synonymer_opptellt)
-        # slutt_indeks = antall_elementer
-        # antall_hopp = 0
-        #
-        # for ord in reversed(list(synonymer_opptellt.keys())):
-        #     if antall_hopp > slutt_indeks:
-        #         antall_hopp += 1
-        #         continue
-        #     antall = synonymer_opptellt[ord]
-        #     if antall > 5:
-        #         print(f"Ord: {ord}, Antall: {antall}")
-        #
-        # for bydel, wordcount in sorted_bydel_wordcounts.items():
-        #     print(f"Ordtelling for {bydel}:")
-        #     for word, count in wordcount.items():
-        #         if count > 1:
-        #             print(f"{word}: {count}")
-        #     print("\n")
 
         # Lag en ordbok for å lagre ord og synonymer
         ord_synonymer = {}
@@ -154,8 +131,6 @@ def main():
         # Ordbok for å samle kommentarer etter bydel, ord og synonym
         resultat = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
 
-        kommentarcount=0
-        # Gå gjennom hver bydel og ord
         for bydel, ordliste in sorted_bydel_wordcounts.items():
             for ordet in ordliste:
                 synonymer = ord_synonymer.get(ordet, [])  # Hent synonymer for ordet
@@ -164,17 +139,66 @@ def main():
                         kommentarlower = bokstaverogmellomrom(kommentar.lower())
                         for synonym in synonymer:
                             if f" {synonym} " in f" {kommentarlower} " or f" {ordet} " in f" {kommentarlower} ":
-                                resultat[bydel][ordet]["navn"] = bydel
-                                resultat[bydel][ordet]["ord"] = ordet
-                                resultat[bydel][ordet]["kommentarer"].append(kommentar)
-                                kommentarcount=kommentarcount+1
-                if len(resultat[bydel][ordet]['kommentarer']) > 0:
-                    print(f"{resultat[bydel][ordet]['navn']}: {resultat[bydel][ordet]['ord']}: {len(resultat[bydel][ordet]['kommentarer'])}")
+                                if kommentar not in resultat[bydel][ordet]["kommentarer"]:
+                                    resultat[bydel][ordet]["kommentarer"].append(kommentar)
 
-        print(kommentarcount)
+        for bydel, ordliste_data in resultat.items():
+            bydel_array = []
+            bydeler_sheet = create(creds, bydel)
+            for ordet, kommentar_data in ordliste_data.items():
+                kommentar_array = []
+
+                for kommentar in kommentar_data["kommentarer"]:
+                    kommentar_array.append([kommentar])
+
+                if len(kommentar_array) > 0:
+                    bydel_array.extend([[" "], [f"{ordet}"]])
+                    bydel_array.extend(kommentar_array)
+            append_values(creds, bydeler_sheet, f"A1:A1", "USER_ENTERED", bydel_array)
 
     except HttpError as err:
         print(err)
+
+
+def create(creds, bydel):
+    # pylint: disable=maybe-no-member
+    try:
+        service = build('sheets', 'v4', credentials=creds)
+        spreadsheet = {
+            'properties': {
+                'title': f"bydel-{bydel}-{datetime.datetime.now()}"
+            }
+        }
+        spreadsheet = service.spreadsheets().create(body=spreadsheet,
+                                                    fields='spreadsheetId') \
+            .execute()
+        print(f"Spreadsheet ID: {(spreadsheet.get('spreadsheetId'))}")
+        return spreadsheet.get('spreadsheetId')
+    except HttpError as error:
+        print(f"An error occurred: {error}")
+        return error
+
+
+def append_values(creds, spreadsheet_id, range_name, value_input_option,
+                  _values):
+    # pylint: disable=maybe-no-member
+    try:
+        service = build('sheets', 'v4', credentials=creds)
+
+        values = _values
+        body = {
+            'values': _values
+        }
+        result = service.spreadsheets().values().append(
+            spreadsheetId=spreadsheet_id, insertDataOption="INSERT_ROWS",
+            range="A1:M1",
+            valueInputOption=value_input_option, body=body).execute()
+        print(f"{(result.get('updates').get('updatedCells'))} cells appended.")
+        return result
+
+    except HttpError as error:
+        print(f"An error occurred: {error}")
+        return error
 
 
 if __name__ == '__main__':
