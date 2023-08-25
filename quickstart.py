@@ -133,7 +133,8 @@ def main():
 
         for bydel, ordliste in sorted_bydel_wordcounts.items():
             for ordet in ordliste:
-                synonymer = ord_synonymer.get(ordet, [])  # Hent synonymer for ordet
+                synonymer = ord_synonymer.get(ordet, [])
+                synonymer.append(ordet)
                 for kommentar_bydel, kommentar in flattened_array:
                     if kommentar_bydel == bydel:
                         kommentarlower = bokstaverogmellomrom(kommentar.lower())
