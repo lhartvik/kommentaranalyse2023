@@ -146,15 +146,17 @@ def main():
         for bydel, ordliste_data in resultat.items():
             bydel_array = []
             bydeler_sheet = create(creds, bydel)
-            for ordet, kommentar_data in ordliste_data.items():
+            sorted_dict = dict(reversed(sorted(ordliste_data.items(), key=lambda item: len([s for s in item[1]['kommentarer'] if s != ""]))))
+            for ordet, kommentar_data in sorted_dict.items():
                 kommentar_array = []
 
                 for kommentar in kommentar_data["kommentarer"]:
-                    kommentar_array.append([kommentar])
+                    kommentar_array.append([" ", kommentar])
 
-                if len(kommentar_array) > 0:
-                    bydel_array.extend([[" "], [f"{ordet}"]])
+                if len(kommentar_array) > 1:
+                    bydel_array.extend([[" "], [f"{ordet}", len(kommentar_array)]])
                     bydel_array.extend(kommentar_array)
+
             append_values(creds, bydeler_sheet, f"A1:A1", "USER_ENTERED", bydel_array)
 
     except HttpError as err:
